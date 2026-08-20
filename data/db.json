@@ -1,18 +1,93 @@
 {
   "salesReps": [
-    { "id": "1", "name": "田中 太郎" },
-    { "id": "2", "name": "佐藤 花子" },
-    { "id": "3", "name": "鈴木 一郎" }
+    {
+      "id": "1",
+      "name": "田中 太郎",
+      "email": "tanaka@example.com",
+      "passwordHash": "e32095f732ec8915b1e6df3e2153c03f:649d88fa937304892333b6391310ca3acd220f56d365780bc03f796cfe0d9866"
+    },
+    {
+      "id": "2",
+      "name": "佐藤 花子",
+      "email": "sato@example.com",
+      "passwordHash": "a3f42c87f7b6fe5ef6fe496da80aa09a:879317d07b253c299f8e588e86470ce159aa4465177088e87f45e939f80ac704"
+    },
+    {
+      "id": "3",
+      "name": "鈴木 一郎",
+      "email": "suzuki@example.com",
+      "passwordHash": "9dfbde93900585aac09d1d2a3787f0d3:3b29dfd1a557004e6153a4afb14fc556381d05fd8e56a7f1df17cbe712cfaa40"
+    },
+    {
+      "id": "2b02811f-9444-4977-a654-8d6430cb4c3a",
+      "name": "松井 秀樹",
+      "email": "matsui@example.com",
+      "passwordHash": "6a1fb5f0786191d93f17ad2412b9baee:243e3370bb33ca7a64c30ab17d0dd3d0335dd5f19f1fea011edb3e2b854948fe"
+    }
   ],
   "records": [
-    { "salesRepId": "1", "year": 2026, "month": 1, "sales": 1800000, "target": 2000000 },
-    { "salesRepId": "1", "year": 2026, "month": 2, "sales": 2200000, "target": 2000000 },
-    { "salesRepId": "1", "year": 2026, "month": 3, "sales": 1900000, "target": 2000000 },
-    { "salesRepId": "2", "year": 2026, "month": 1, "sales": 2500000, "target": 2200000 },
-    { "salesRepId": "2", "year": 2026, "month": 2, "sales": 1800000, "target": 2200000 },
-    { "salesRepId": "2", "year": 2026, "month": 3, "sales": 2100000, "target": 2200000 },
-    { "salesRepId": "3", "year": 2026, "month": 1, "sales": 1500000, "target": 1800000 },
-    { "salesRepId": "3", "year": 2026, "month": 2, "sales": 1600000, "target": 1800000 },
-    { "salesRepId": "3", "year": 2026, "month": 3, "sales": 1750000, "target": 1800000 }
+    {
+      "salesRepId": "1",
+      "year": 2026,
+      "month": 1,
+      "sales": 1800000,
+      "target": 2000000
+    },
+    {
+      "salesRepId": "1",
+      "year": 2026,
+      "month": 2,
+      "sales": 2200000,
+      "target": 2000000
+    },
+    {
+      "salesRepId": "1",
+      "year": 2026,
+      "month": 3,
+      "sales": 1900000,
+      "target": 2000000
+    },
+    {
+      "salesRepId": "2",
+      "year": 2026,
+      "month": 1,
+      "sales": 2500000,
+      "target": 2200000
+    },
+    {
+      "salesRepId": "2",
+      "year": 2026,
+      "month": 2,
+      "sales": 1800000,
+      "target": 2200000
+    },
+    {
+      "salesRepId": "2",
+      "year": 2026,
+      "month": 3,
+      "sales": 2100000,
+      "target": 2200000
+    },
+    {
+      "salesRepId": "3",
+      "year": 2026,
+      "month": 1,
+      "sales": 1500000,
+      "target": 1800000
+    },
+    {
+      "salesRepId": "3",
+      "year": 2026,
+      "month": 2,
+      "sales": 1600000,
+      "target": 1800000
+    },
+    {
+      "salesRepId": "3",
+      "year": 2026,
+      "month": 3,
+      "sales": 1750000,
+      "target": 1800000
+    }
   ]
 }

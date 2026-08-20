@@ -4,6 +4,16 @@ import path from 'path'
 export interface SalesRep {
   id: string
   name: string
+  email: string
+  passwordHash: string
+}
+
+export type PublicSalesRep = Omit<SalesRep, 'passwordHash'>
+
+export function toPublicRep(rep: SalesRep): PublicSalesRep {
+  const { passwordHash, ...publicRep } = rep
+  void passwordHash
+  return publicRep
 }
 
 export interface SalesRecord {

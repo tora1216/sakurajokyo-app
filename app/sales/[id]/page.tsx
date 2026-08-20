@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MonthlyChart } from '@/components/MonthlyChart'
 
@@ -35,6 +35,7 @@ function AchievementBadge({ rate }: { rate: number | null }) {
 
 export default function SalesRepPage() {
   const params = useParams()
+  const router = useRouter()
   const id = params.id as string
   const currentYear = new Date().getFullYear()
   const currentMonth = new Date().getMonth() + 1
@@ -95,6 +96,11 @@ export default function SalesRepPage() {
     setTimeout(() => setSavedMsg(''), 2500)
   }
 
+  const logout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/sales')
+  }
+
   const totalSales = records.reduce((sum, r) => sum + r.sales, 0)
   const totalTarget = records.reduce((sum, r) => sum + r.target, 0)
   const yearRate = totalTarget > 0 ? (totalSales / totalTarget) * 100 : null
@@ -129,11 +135,19 @@ export default function SalesRepPage() {
 
   return (
     <div className="min-h-screen bg-brand-bg">
-      <header className="bg-brand text-white px-6 py-4 flex items-center gap-4">
-        <Link href="/sales" className="text-brand-pale hover:text-white text-sm">
-          ← 戻る
-        </Link>
-        <h1 className="text-xl font-bold">🌸 {rep.name}</h1>
+      <header className="bg-brand text-white px-6 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="text-brand-pale hover:text-white text-sm">
+            ← ホーム
+          </Link>
+          <h1 className="text-xl font-bold">🌸 {rep.name}</h1>
+        </div>
+        <button
+          onClick={logout}
+          className="text-brand-pale hover:text-white text-sm"
+        >
+          ログアウト
+        </button>
       </header>
 
       <main className="p-6 max-w-4xl mx-auto">

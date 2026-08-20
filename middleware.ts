@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth'
 
-export default function middleware(request: NextRequest) {
+function checkAdminAuth(request: NextRequest): NextResponse | null {
   const authHeader = request.headers.get('authorization')
 
   if (!authHeader?.startsWith('Basic ')) {
@@ -26,9 +27,47 @@ export default function middleware(request: NextRequest) {
     })
   }
 
+  return null
+}
+
+export default async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  if (pathname.startsWith('/admin')) {
+    const denied = checkAdminAuth(request)
+    if (denied) return denied
+    return NextResponse.next()
+  }
+
+  // /sales itself is the login page and stays open.
+  if (pathname === '/sales') {
+    const token = request.cookies.get(SESSION_COOKIE)?.value
+    const salesRepId = token ? await verifySessionToken(token) : null
+    if (salesRepId) {
+      return NextResponse.redirect(new URL(`/sales/${salesRepId}`, request.url))
+    }
+    return NextResponse.next()
+  }
+
+  if (pathname.startsWith('/sales/')) {
+    const token = request.cookies.get(SESSION_COOKIE)?.value
+    const salesRepId = token ? await verifySessionToken(token) : null
+
+    if (!salesRepId) {
+      return NextResponse.redirect(new URL('/sales', request.url))
+    }
+
+    const requestedId = pathname.split('/')[2]
+    if (requestedId && requestedId !== salesRepId) {
+      return NextResponse.redirect(new URL(`/sales/${salesRepId}`, request.url))
+    }
+
+    return NextResponse.next()
+  }
+
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin/:path*', '/sales', '/sales/:path*'],
 }

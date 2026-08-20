@@ -1,21 +1,37 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-interface SalesRep {
-  id: string
-  name: string
-}
+export default function SalesLoginPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-export default function SalesPage() {
-  const [salesReps, setSalesReps] = useState<SalesRep[]>([])
+  const login = async () => {
+    if (!email.trim() || !password) return
+    setLoading(true)
+    setError('')
 
-  useEffect(() => {
-    fetch('/api/sales-reps')
-      .then((r) => r.json())
-      .then(setSalesReps)
-  }, [])
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.trim(), password }),
+    })
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => null)
+      setError(data?.error ?? 'ログインに失敗しました')
+      setLoading(false)
+      return
+    }
+
+    const { id } = await res.json()
+    router.push(`/sales/${id}`)
+  }
 
   return (
     <div className="min-h-screen bg-brand-bg">
@@ -23,34 +39,52 @@ export default function SalesPage() {
         <Link href="/" className="text-brand-pale hover:text-white text-sm">
           ← ホーム
         </Link>
-        <h1 className="text-xl font-bold">🌸 担当者を選択</h1>
+        <h1 className="text-xl font-bold">🌸 営業担当ログイン</h1>
       </header>
 
-      <main className="p-6 max-w-md mx-auto">
-        <p className="text-gray-500 mb-6 text-center">あなたの名前を選択してください</p>
+      <main className="p-6 max-w-sm mx-auto">
+        <div className="bg-white rounded-xl p-6 shadow-sm mt-6">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">メールアドレス</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && login()}
+                placeholder="you@example.com"
+                autoComplete="username"
+                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-border"
+              />
+            </div>
 
-        {salesReps.length === 0 ? (
-          <div className="text-center text-gray-400 p-8 bg-white rounded-xl shadow-sm">
-            メンバーが登録されていません。
-            <br />
-            管理者に連絡してください。
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">パスワード</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && login()}
+                autoComplete="current-password"
+                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-border"
+              />
+            </div>
+
+            {error && <div className="text-red-500 text-sm">{error}</div>}
+
+            <button
+              onClick={login}
+              disabled={loading || !email.trim() || !password}
+              className="w-full bg-brand text-white py-2.5 rounded-lg hover:bg-brand-dark disabled:opacity-50 font-medium transition-colors"
+            >
+              {loading ? 'ログイン中...' : 'ログイン'}
+            </button>
           </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {salesReps.map((rep) => (
-              <Link
-                key={rep.id}
-                href={`/sales/${rep.id}`}
-                className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md hover:bg-brand-bg transition-all flex items-center justify-between group"
-              >
-                <span className="text-lg font-medium text-gray-800">{rep.name}</span>
-                <span className="text-brand-border group-hover:text-brand text-xl transition-colors">
-                  →
-                </span>
-              </Link>
-            ))}
-          </div>
-        )}
+        </div>
+
+        <p className="text-center text-gray-400 text-sm mt-4">
+          ログイン情報が分からない場合は管理者に連絡してください。
+        </p>
       </main>
     </div>
   )

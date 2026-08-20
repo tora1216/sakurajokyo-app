@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.2.0";
+export const APP_VERSION = "1.3.0";
 
 export type ChangelogEntry = {
   version: string;
@@ -8,6 +8,18 @@ export type ChangelogEntry = {
 };
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "1.3.0",
+    date: "2026-08-20",
+    title: "営業担当ログインをメール＋パスワード認証に変更",
+    changes: [
+      "営業担当はメールアドレスとパスワードでログインする方式に変更（名前選択方式を廃止）",
+      "ログインセッションをCookieで管理し、他の担当者のページには直接アクセスできないよう制御",
+      "パスワードはハッシュ化して保存（平文は保持しない）",
+      "メンバー管理画面に、メールアドレス・パスワード欄を追加（パスワードは自動生成も選択可能）",
+      "メンバー管理画面から既存メンバーのパスワードを再発行できる機能を追加",
+    ],
+  },
   {
     version: "1.0.0",
     date: "2026-03-17",
