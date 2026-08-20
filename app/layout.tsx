@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "桜上居株式会社 営業管理",
   description: "営業成績・目標管理システム",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
