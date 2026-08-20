@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
 import { MonthlyChart } from '@/components/MonthlyChart'
 
@@ -98,7 +99,7 @@ export default function SalesRepPage() {
 
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/sales')
+    router.push('/')
   }
 
   const totalSales = records.reduce((sum, r) => sum + r.sales, 0)
@@ -136,18 +137,21 @@ export default function SalesRepPage() {
   return (
     <div className="min-h-screen bg-brand-bg">
       <header className="bg-brand text-white px-6 py-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-brand-pale hover:text-white text-sm">
-            ← ホーム
+        <Link href="/" className="flex items-center gap-1.5 hover:opacity-90 transition-opacity">
+          <Image src="/logo.png" alt="" width={24} height={24} className="bg-white rounded-full p-0.5 shrink-0" />
+          <h1 className="text-xl font-bold">{rep.name}</h1>
+        </Link>
+        <div className="flex items-center gap-4 shrink-0">
+          <Link href={`/sales/${id}/settings`} className="text-brand-pale hover:text-white text-sm">
+            設定
           </Link>
-          <h1 className="text-xl font-bold">🌸 {rep.name}</h1>
+          <button
+            onClick={logout}
+            className="bg-brand-secondary hover:bg-brand-dark px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors shrink-0"
+          >
+            ログアウト
+          </button>
         </div>
-        <button
-          onClick={logout}
-          className="text-brand-pale hover:text-white text-sm"
-        >
-          ログアウト
-        </button>
       </header>
 
       <main className="p-6 max-w-4xl mx-auto">

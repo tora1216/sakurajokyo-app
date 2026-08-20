@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { MonthlyChart } from '@/components/MonthlyChart'
 
@@ -78,12 +79,10 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-brand-bg">
       <header className="bg-brand text-white px-4 sm:px-6 py-4 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-          <Link href="/" className="text-brand-pale hover:text-white text-sm shrink-0">
-            ← ホーム
-          </Link>
-          <h1 className="text-base sm:text-xl font-bold truncate">🌸 管理者ダッシュボード</h1>
-        </div>
+        <Link href="/" className="flex items-center gap-2 sm:gap-4 min-w-0 hover:opacity-90 transition-opacity">
+          <Image src="/logo.png" alt="" width={24} height={24} className="bg-white rounded-full p-0.5 shrink-0" />
+          <h1 className="text-base sm:text-xl font-bold truncate">管理者ダッシュボード</h1>
+        </Link>
         <Link
           href="/admin/members"
           className="bg-brand-secondary hover:bg-brand-dark px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors shrink-0"

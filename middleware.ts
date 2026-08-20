@@ -39,14 +39,9 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // /sales itself is the login page and stays open.
+  // There's no standalone /sales page anymore — login happens in a dialog on the home page.
   if (pathname === '/sales') {
-    const token = request.cookies.get(SESSION_COOKIE)?.value
-    const salesRepId = token ? await verifySessionToken(token) : null
-    if (salesRepId) {
-      return NextResponse.redirect(new URL(`/sales/${salesRepId}`, request.url))
-    }
-    return NextResponse.next()
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   if (pathname.startsWith('/sales/')) {
@@ -54,7 +49,7 @@ export default async function middleware(request: NextRequest) {
     const salesRepId = token ? await verifySessionToken(token) : null
 
     if (!salesRepId) {
-      return NextResponse.redirect(new URL('/sales', request.url))
+      return NextResponse.redirect(new URL('/', request.url))
     }
 
     const requestedId = pathname.split('/')[2]

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "さくら営業管理",
+  title: "桜上居株式会社 営業管理",
   description: "営業成績・目標管理システム",
 };
 

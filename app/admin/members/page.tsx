@@ -9,12 +9,19 @@ interface SalesRep {
   email: string
 }
 
+const PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789'
+
+function generatePassword(length = 10): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(length))
+  return Array.from(bytes, (b) => PASSWORD_CHARS[b % PASSWORD_CHARS.length]).join('')
+}
+
 export default function MembersPage() {
   const [salesReps, setSalesReps] = useState<SalesRep[]>([])
+  const [showAddDialog, setShowAddDialog] = useState(false)
   const [newName, setNewName] = useState('')
   const [newEmail, setNewEmail] = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const [autoPassword, setAutoPassword] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [issuedPassword, setIssuedPassword] = useState<{ name: string; email: string; password: string } | null>(null)
@@ -28,9 +35,16 @@ export default function MembersPage() {
     fetchReps()
   }, [])
 
+  const openAddDialog = () => {
+    setNewName('')
+    setNewEmail('')
+    setNewPassword('')
+    setError('')
+    setShowAddDialog(true)
+  }
+
   const addRep = async () => {
-    if (!newName.trim() || !newEmail.trim()) return
-    if (!autoPassword && !newPassword.trim()) return
+    if (!newName.trim() || !newEmail.trim() || !newPassword.trim()) return
     setLoading(true)
     setError('')
 
@@ -40,7 +54,7 @@ export default function MembersPage() {
       body: JSON.stringify({
         name: newName.trim(),
         email: newEmail.trim(),
-        password: autoPassword ? undefined : newPassword.trim(),
+        password: newPassword.trim(),
       }),
     })
 
@@ -52,6 +66,7 @@ export default function MembersPage() {
       return
     }
 
+    setShowAddDialog(false)
     setIssuedPassword({ name: data.name, email: data.email, password: data.password })
     setNewName('')
     setNewEmail('')
@@ -111,71 +126,21 @@ export default function MembersPage() {
           </div>
         )}
 
-        {/* Add member */}
-        <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
-          <h2 className="text-lg font-semibold mb-4">新しいメンバーを追加</h2>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">名前</label>
-              <input
-                type="text"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="田中 太郎"
-                className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-border"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">メールアドレス</label>
-              <input
-                type="email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                placeholder="tanaka@example.com"
-                className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-border"
-              />
-            </div>
-
-            <div>
-              <label className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                <input
-                  type="checkbox"
-                  checked={autoPassword}
-                  onChange={(e) => setAutoPassword(e.target.checked)}
-                />
-                パスワードを自動生成する
-              </label>
-              {!autoPassword && (
-                <input
-                  type="text"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="パスワードを入力"
-                  className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-border"
-                />
-              )}
-            </div>
-
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-
-            <button
-              onClick={addRep}
-              disabled={!newName.trim() || !newEmail.trim() || (!autoPassword && !newPassword.trim()) || loading}
-              className="w-full bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 font-medium transition-colors"
-            >
-              追加
-            </button>
-          </div>
-        </div>
-
         {/* Member list */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-700">
               メンバー一覧
             </h2>
-            <span className="text-sm text-gray-400">{salesReps.length}人</span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-400">{salesReps.length}人</span>
+              <button
+                onClick={openAddDialog}
+                className="bg-brand text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-brand-dark transition-colors"
+              >
+                + メンバーを追加
+              </button>
+            </div>
           </div>
 
           {salesReps.length === 0 ? (
@@ -215,6 +180,82 @@ export default function MembersPage() {
           )}
         </div>
       </main>
+
+      {/* Add member dialog */}
+      {showAddDialog && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50"
+          onClick={() => setShowAddDialog(false)}
+        >
+          <div
+            className="bg-white rounded-xl p-6 shadow-lg w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-semibold mb-4">新しいメンバーを追加</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">名前</label>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="田中 太郎"
+                  className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-border"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">メールアドレス</label>
+                <input
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  placeholder="tanaka@example.com"
+                  className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-border"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">パスワード</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="パスワードを入力"
+                    className="flex-1 min-w-0 border rounded-lg px-4 py-2 font-mono focus:outline-none focus:ring-2 focus:ring-brand-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setNewPassword(generatePassword())}
+                    className="shrink-0 border border-brand text-brand px-3 py-2 rounded-lg text-sm font-medium hover:bg-brand-bg transition-colors"
+                  >
+                    自動生成
+                  </button>
+                </div>
+              </div>
+
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={() => setShowAddDialog(false)}
+                  className="flex-1 border rounded-lg py-2 font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  キャンセル
+                </button>
+                <button
+                  onClick={addRep}
+                  disabled={!newName.trim() || !newEmail.trim() || !newPassword.trim() || loading}
+                  className="flex-1 bg-brand text-white py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 font-medium transition-colors"
+                >
+                  追加
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

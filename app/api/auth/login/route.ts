@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readDB } from '@/lib/db'
-import { createSessionToken, verifyPassword, SESSION_COOKIE } from '@/lib/auth'
+import { createSessionToken, verifyPassword, SESSION_COOKIE, SESSION_MAX_AGE_SECONDS } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json()
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: SESSION_MAX_AGE_SECONDS,
   })
   return response
 }

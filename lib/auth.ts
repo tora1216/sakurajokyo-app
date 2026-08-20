@@ -3,7 +3,10 @@
 
 const encoder = new TextEncoder()
 const SESSION_SECRET = process.env.SESSION_SECRET ?? 'dev-secret-change-me'
-const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 30 // 30 days
+// 400 days is the practical maximum a browser will honor for a cookie,
+// so this is as close to "valid until logout" as a persistent cookie gets.
+export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 400
+const SESSION_MAX_AGE_MS = SESSION_MAX_AGE_SECONDS * 1000
 export const SESSION_COOKIE = 'sales_session'
 
 function toHex(buf: ArrayBuffer | Uint8Array): string {
