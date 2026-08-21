@@ -34,9 +34,8 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/admin')) {
-    // 検証のため一時的に無効化中
-    // const denied = checkAdminAuth(request)
-    // if (denied) return denied
+    const denied = checkAdminAuth(request)
+    if (denied) return denied
     return NextResponse.next()
   }
 
