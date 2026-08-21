@@ -13,7 +13,7 @@ export default async function Home() {
     <main className="min-h-screen bg-brand-bg flex flex-col items-center justify-center">
       <div className="text-center mb-12">
         <Image src="/logo.png" alt="桜上居株式会社" width={96} height={96} className="mx-auto mb-4" priority />
-        <h1 className="text-4xl font-bold text-brand mb-3">桜上居株式会社 営業管理</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-brand mb-3">桜上居株式会社 営業管理</h1>
         <p className="text-gray-500 text-lg">営業成績・目標管理システム</p>
       </div>
 

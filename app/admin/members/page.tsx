@@ -130,10 +130,9 @@ export default function MembersPage() {
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-700">
-              メンバー一覧
+              メンバー（{salesReps.length}人）
             </h2>
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-400">{salesReps.length}人</span>
               <button
                 onClick={openAddDialog}
                 className="bg-brand text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-brand-dark transition-colors"
