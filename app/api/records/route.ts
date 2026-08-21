@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const salesRepId = searchParams.get('salesRepId')
   const year = searchParams.get('year')
 
-  const db = readDB()
+  const db = await readDB()
   let records = db.records
 
   if (salesRepId) records = records.filter((r) => r.salesRepId === salesRepId)
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const { salesRepId, year, month, sales, target } = await request.json()
-  const db = readDB()
+  const db = await readDB()
 
   const idx = db.records.findIndex(
     (r) => r.salesRepId === salesRepId && r.year === year && r.month === month
@@ -30,6 +30,6 @@ export async function POST(request: NextRequest) {
     db.records.push(record)
   }
 
-  writeDB(db)
+  await writeDB(db)
   return NextResponse.json(record)
 }

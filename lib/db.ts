@@ -1,5 +1,4 @@
-import fs from 'fs'
-import path from 'path'
+import { firestore } from './firebase-admin'
 
 export interface SalesRep {
   id: string
@@ -29,20 +28,17 @@ export interface DB {
   records: SalesRecord[]
 }
 
-const DB_PATH = path.join(process.cwd(), 'data', 'db.json')
+const DB_DOC = firestore.collection('app-data').doc('db')
 
-export function readDB(): DB {
-  try {
-    return JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'))
-  } catch {
-    return { salesReps: [], records: [] }
+export async function readDB(): Promise<DB> {
+  const snapshot = await DB_DOC.get()
+  const data = snapshot.data()
+  return {
+    salesReps: data?.salesReps ?? [],
+    records: data?.records ?? [],
   }
 }
 
-export function writeDB(db: DB): void {
-  const dir = path.dirname(DB_PATH)
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true })
-  }
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), 'utf-8')
+export async function writeDB(db: DB): Promise<void> {
+  await DB_DOC.set(db)
 }

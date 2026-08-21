@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.3.0";
+export const APP_VERSION = "1.4.0";
 
 export type ChangelogEntry = {
   version: string;
@@ -8,6 +8,15 @@ export type ChangelogEntry = {
 };
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "1.4.0",
+    date: "2026-08-21",
+    title: "データベースをFirebase Firestoreに移行",
+    changes: [
+      "営業担当・実績データの保存先をローカルJSONファイルからFirestoreに変更",
+      "サーバー側のみでFirebase Admin SDKを使用し、既存の認証方式は変更なし",
+    ],
+  },
   {
     version: "1.3.0",
     date: "2026-08-20",

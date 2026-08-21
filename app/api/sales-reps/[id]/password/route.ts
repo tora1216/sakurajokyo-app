@@ -20,7 +20,7 @@ export async function PATCH(
     return NextResponse.json({ error: '新しいパスワードは8文字以上で入力してください' }, { status: 400 })
   }
 
-  const db = readDB()
+  const db = await readDB()
   const rep = db.salesReps.find((r) => r.id === id)
   if (!rep) {
     return NextResponse.json({ error: 'メンバーが見つかりません' }, { status: 404 })
@@ -31,7 +31,7 @@ export async function PATCH(
   }
 
   rep.passwordHash = await hashPassword(newPassword)
-  writeDB(db)
+  await writeDB(db)
 
   return NextResponse.json({ success: true })
 }

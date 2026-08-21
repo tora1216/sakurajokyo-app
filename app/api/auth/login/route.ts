@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'メールアドレスとパスワードを入力してください' }, { status: 400 })
   }
 
-  const db = readDB()
+  const db = await readDB()
   const rep = db.salesReps.find((r) => r.email.toLowerCase() === email.trim().toLowerCase())
 
   if (!rep || !(await verifyPassword(password, rep.passwordHash))) {

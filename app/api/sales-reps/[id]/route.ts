@@ -9,7 +9,7 @@ export async function PATCH(
   const { id } = await params
   const { regeneratePassword } = await request.json()
 
-  const db = readDB()
+  const db = await readDB()
   const rep = db.salesReps.find((r) => r.id === id)
   if (!rep) {
     return NextResponse.json({ error: 'メンバーが見つかりません' }, { status: 404 })
@@ -21,7 +21,7 @@ export async function PATCH(
 
   const plainPassword = generatePassword()
   rep.passwordHash = await hashPassword(plainPassword)
-  writeDB(db)
+  await writeDB(db)
 
   return NextResponse.json({ password: plainPassword })
 }
@@ -31,9 +31,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  const db = readDB()
+  const db = await readDB()
   db.salesReps = db.salesReps.filter((r) => r.id !== id)
   db.records = db.records.filter((r) => r.salesRepId !== id)
-  writeDB(db)
+  await writeDB(db)
   return NextResponse.json({ success: true })
 }
