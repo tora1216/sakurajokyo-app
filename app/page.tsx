@@ -20,6 +20,7 @@ export default async function Home() {
       <div className="flex flex-col sm:flex-row gap-6 w-full px-4 sm:px-0 sm:w-auto">
         <Link
           href="/admin"
+          prefetch={false}
           className="bg-brand hover:bg-brand-dark text-white rounded-2xl px-10 py-8 text-center shadow-lg transition-all hover:scale-105"
         >
           <div className="text-3xl mb-2">👔</div>
